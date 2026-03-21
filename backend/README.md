@@ -1,0 +1,77 @@
+# AI Song Generation Platform - Backend API
+
+Welcome to the backend API for the **AI Song Generation Platform**! This tool empowers users to generate custom songs using AI by simply providing details like genre, mood, lyrics, and story. From there, it tracks generation progress, saves the completed audio for offline listening, and allows users to build personalized playlists. 
+
+Currently, the core database modeling and secure CRUD operations via Django Admin have been built to satisfy business requirements.
+
+## 🚀 Key Features
+
+* **Custom Accounts:** Login with Email (prepped for OAuth), featuring custom user vs. Admin roles.
+* **Song Management:** Define prompts, set track visibility (Public vs. Private), and monitor AI generating statuses.
+* **Playlist Validation:** Build custom playlists knowing that strict validations prevent you from accidentally adding songs owned by other users or unfinished generation jobs.
+* **Moderation:** Tools for platform administrators to enforce content safety rules.
+
+## 🛠 Prerequisites
+- **Python 3.10+**
+- **PostgreSQL 15+**
+
+## 💻 How to Run the Project
+
+1. **Clone the repository and set up a Virtual Environment:**
+   ```bash
+   git clone https://github.com/pmperpm/AI-Song-Generation-Platform.git
+   cd AI-Song-Generation-Platform/backend
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+2. **Install Dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Apply Migrations (Build the Database):**
+   ```bash
+   python3 manage.py makemigrations
+   python3 manage.py migrate
+   ```
+
+4. **Create a Superuser (Admin Access):**
+   ```bash
+   python3 manage.py createsuperuser
+   ```
+   *Follow the prompts (Username, Email, Role).*
+
+5. **Run the Server:**
+   ```bash
+   python3 manage.py runserver
+   ```
+   Your backend will now be live at `http://127.0.0.1:8000/`.
+
+---
+
+## 📊 Managing Data & CRUD Operations 
+
+All Create, Read, Update, and Delete operations are performed inside the **Django Admin Interface**. 
+
+Navigate to **http://127.0.0.1:8000/admin/** and log in with your Superuser.
+
+### Users (`/admin/users/user/`)
+* **Create/Update:** Add users without passwords (setup for Google OAuth integration). Assign roles (User vs Admin).
+* **Read:** Easily seek users by email.
+* **Delete:** Remove accounts and automatically cascade deletions for all their songs.
+
+### Songs (`/admin/songs/song/`)
+* **Create:** Simulate generating a song. It must be attached to an owner.
+* **Update:** Alter visibility (Private/Public) or add custom cover artwork.
+* **Read:** Filter tracks securely by Status (`Generating`, `Complete`, `Fail`), or by Visibility.
+* **Delete:** Administrators can delete generated media in case of violations.
+
+### Playlists (`/admin/playlists/playlist/`)
+* **Create/Update:** Select your previously generated tracks using the horizontal selection menu.
+* **Validation:** The system strictly checks to make sure songs belong to the Playlist owner *and* possess a status of `Complete`.
+* **Read/Delete:** Keep track of personal library structures. Deleting a playlist never deletes the origin songs.
+
+
+### CRUD Operation Video
+[AI Song Generation Platform CRUD Video](https://drive.google.com/file/d/1OBpWr6yC_XO12VS6znQ4s5BMrcgKwJcv/view?usp=sharing)
