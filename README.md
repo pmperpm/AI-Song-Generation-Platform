@@ -2,20 +2,7 @@
 
 Welcome to the backend API for the **AI Song Generation Platform**! This tool empowers users to generate custom songs using AI by simply providing details like genre, mood, lyrics, and story. From there, it tracks generation progress, saves the completed audio for offline listening, and allows users to build personalized playlists. 
 
-Currently, the core database modeling and secure CRUD operations via Django Admin have been built to satisfy business requirements.
-
-## 🚀 Key Features
-
-* **Custom Accounts:** Login with Email (prepped for OAuth), featuring custom user vs. Admin roles.
-* **Song Management:** Define prompts, set track visibility (Public vs. Private), and monitor AI generating statuses.
-* **Playlist Validation:** Build custom playlists knowing that strict validations prevent you from accidentally adding songs owned by other users or unfinished generation jobs.
-* **Moderation:** Tools for platform administrators to enforce content safety rules.
-
-## 🛠 Prerequisites
-- **Python 3.10+**
-- **PostgreSQL 15+**
-
-## 💻 How to Run the Project
+## How to Run the Project
 
 1. **Clone the repository and set up a Virtual Environment:**
    ```bash
@@ -50,7 +37,7 @@ Currently, the core database modeling and secure CRUD operations via Django Admi
 
 ---
 
-## 📊 Managing Data & CRUD Operations 
+## CRUD Operations 
 
 All Create, Read, Update, and Delete operations are performed inside the **Django Admin Interface**. 
 
