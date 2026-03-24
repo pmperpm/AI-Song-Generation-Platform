@@ -2,12 +2,17 @@
 
 **AI Song Generation Platform** empowers users to generate custom songs using AI by simply providing details like genre, mood, lyrics, and story. From there, it tracks generation progress, saves the completed audio for offline listening, and allows users to build personalized playlists. 
 
+## Prerequisites
+- **Python 3.10 - 3.12** (*Note: Due to a `psycopg2` dependency, Python 3.13+ or 3.14 may cause installation errors. Please use Python 3.12 or earlier.*)
+- **PostgreSQL 15+**
+
 ## How to Run the Project
 
 1. **Clone the repository and set up a Virtual Environment:**
    ```bash
    git clone https://github.com/pmperpm/AI-Song-Generation-Platform.git
    cd AI-Song-Generation-Platform/backend
+   # Make sure you are using Python 3.12 or earlier
    python3 -m venv venv
    source venv/bin/activate
    ```
@@ -17,19 +22,27 @@
    pip install -r requirements.txt
    ```
 
-3. **Apply Migrations (Build the Database):**
+3. **Database Configuration:**
+   Ensure PostgreSQL is running locally on port `5432` with a database named `ai_song_generation_platform`. Use `postgres` as both the default username and password (or change these in a `.env` file).
+
+   To quickly create the database via CLI, you can run:
+   ```bash
+   psql -U postgres -c "CREATE DATABASE ai_song_generation_platform;"
+   ```
+
+4. **Apply Migrations (Build the Database):**
    ```bash
    python3 manage.py makemigrations
    python3 manage.py migrate
    ```
 
-4. **Create a Superuser (Admin Access):**
+5. **Create a Superuser (Admin Access):**
    ```bash
    python3 manage.py createsuperuser
    ```
    *Follow the prompts (Username, Email, Role).*
 
-5. **Run the Server:**
+6. **Run the Server:**
    ```bash
    python3 manage.py runserver
    ```
@@ -59,5 +72,5 @@ Navigate to **http://127.0.0.1:8000/admin/** and log in with your Superuser.
 * **Validation:** The system strictly checks to make sure songs belong to the Playlist owner and possess a status of `Complete`.
 * **Read/Delete:** Keep track of personal library structures. Deleting a playlist never deletes the origin songs.
 
-### CRUD Operation Video
-[AI Song Generation Platform CRUD Video](https://drive.google.com/file/d/1OBpWr6yC_XO12VS6znQ4s5BMrcgKwJcv/view?usp=sharing)
+### CRUD Operation Video and API Screenshots
+[AI Song Generation Platform Folders](https://drive.google.com/drive/folders/1rDlD28AFEa1Xlzm_DTEQohkNDBt1tzZX?usp=share_link)
