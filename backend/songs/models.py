@@ -7,6 +7,15 @@ class Genre(models.TextChoices):
     POP        = "pop",        _("Pop")
     ELECTRONIC = "electronic", _("Electronic")
     ROCK       = "rock",       _("Rock")
+    HIP_HOP    = "hip_hop",    _("Hip-Hop")
+    RNB        = "rnb",        _("R&B")
+    CLASSICAL  = "classical",  _("Classical")
+    COUNTRY    = "country",    _("Country")
+    BLUES      = "blues",      _("Blues")
+    REGGAE     = "reggae",     _("Reggae")
+    METAL      = "metal",      _("Metal")
+    INDIE      = "indie",      _("Indie")
+    FOLK       = "folk",       _("Folk")
 
 
 class Status(models.TextChoices):

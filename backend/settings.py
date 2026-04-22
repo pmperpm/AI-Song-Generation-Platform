@@ -125,6 +125,8 @@ CORS_ALLOWED_ORIGINS = os.getenv(
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
 
+GENERATOR_STRATEGY = os.getenv("GENERATOR_STRATEGY", "mock")
+
 # Suno API
-SUNO_API_KEY = "7a3345fef25b21961aeab9631252125e"
-SUNO_BASE_URL = "https://api.sunoapi.org"
+SUNO_API_KEY = os.getenv("SUNO_API_KEY", "")
+SUNO_BASE_URL = "https://api.sunoapi.org/api/v1"

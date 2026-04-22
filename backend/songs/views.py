@@ -32,6 +32,15 @@ class SongListCreateView(generics.ListCreateAPIView):
             return SongCreateSerializer
         return SongSerializer
 
+    def perform_create(self, serializer):
+        from .tasks.music import generate_song_task
+
+        # Generate the song first and catch the generated object
+        song = serializer.save(owner=self.request.user, status=Status.GENERATING)
+        
+        # Fire off the async task
+        generate_song_task.delay(song.pk)
+
 
 class SongRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Song.objects.all()
