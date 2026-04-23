@@ -50,6 +50,38 @@
 
 ---
 
+## Generator Strategy Configuration
+
+This project uses the **Strategy Pattern** to swap out the AI generation backend. You can run it in two modes: `mock` (for offline testing) or `suno` (for real API integration).
+
+### 1. How to run Mock Mode (Default)
+By default, the application runs in Mock mode. It will instantly return a dummy task and wait 5 seconds before downloading a sample audio file. 
+You can explicitly set this in your `backend/.env` file:
+```env
+GENERATOR_STRATEGY=mock
+```
+
+### 2. How to run Suno API Mode
+To hit the real Suno API (api.sunoapi.org), you need to change the strategy in `backend/.env` and supply your real API key:
+
+```env
+GENERATOR_STRATEGY=suno
+SUNO_API_KEY=your_real_api_key_here
+```
+
+### 3. Running the Async Background Worker
+Because both strategies take time to run, they are processed asynchronously. 
+**You must run Redis and Celery alongside your Django server:**
+
+1. Start Redis: `redis-server`
+2. Start Celery (in a new terminal):
+   ```bash
+   cd backend
+   celery -A celery_app worker --loglevel=info
+   ```
+
+---
+
 ## CRUD Operations 
 
 All Create, Read, Update, and Delete operations are performed inside the **Django Admin Interface**. 
