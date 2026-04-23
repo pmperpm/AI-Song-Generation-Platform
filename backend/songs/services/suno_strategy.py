@@ -2,12 +2,15 @@ import httpx
 import time
 import logging
 from django.conf import settings
+from .generator_strategy import SongGeneratorStrategy
 
 logger = logging.getLogger(__name__)
 
 SUNO_BASE_URL = "https://api.sunoapi.org/api/v1"
 
-class SunoService:
+class SunoSongGeneratorStrategy(SongGeneratorStrategy):
+    """Suno API integration."""
+    
     def __init__(self):
         self.api_key = getattr(settings, "SUNO_API_KEY", "")
         self.headers = {
@@ -17,7 +20,7 @@ class SunoService:
 
     def build_prompt(self, song) -> dict:
         """
-        Maps your Song model fields → Suno generation payload (Suno API Official).
+        Maps Song model fields → Suno generation payload (Suno API Official).
         """
         # Determine customMode based on if lyrics exist
         has_lyrics = bool(song.lyrics.strip()) if song.lyrics else False
@@ -28,7 +31,7 @@ class SunoService:
             if song.mood:
                 prompt += f" with a {song.mood} mood"
             if song.story:
-                # Keep under 500 chars limit for non-custom mode
+                # Keep under 500 chars limit
                 prompt += f" about {song.story[:400]}"
                 
             return {
@@ -36,11 +39,10 @@ class SunoService:
                 "instrumental": False,
                 "prompt": prompt[:500], 
                 "model": "V4_5",
-                # Dummy callback URL, since we use polling instead of webhooks
                 "callBackUrl": getattr(settings, "SUNO_CALLBACK_URL", "https://api.example.com/callback")
             }
 
-        # Custom Mode (using strictly provided lyrics)
+        # using strictly provided lyrics if they exist
         style_parts = [song.genre]
         if song.mood:
             style_parts.append(song.mood)
@@ -51,9 +53,9 @@ class SunoService:
         return {
             "customMode": True,
             "instrumental": False,
-            "prompt": song.lyrics[:5000],  # V4_5 limit
+            "prompt": song.lyrics[:5000],# V4_5 limit
             "style": style_tag,
-            "title": title[:100],          # V4_5 limit
+            "title": title[:100],# V4_5 limit
             "model": "V4_5",
             "callBackUrl": getattr(settings, "SUNO_CALLBACK_URL", "https://api.example.com/callback")
         }
