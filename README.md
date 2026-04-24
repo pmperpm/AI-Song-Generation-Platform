@@ -17,10 +17,13 @@
    source venv/bin/activate
    ```
 
-2. **Install Dependencies:**
+2. **Install Dependencies & Environment:**
    ```bash
    pip install -r requirements.txt
+   # Copy the example env file to set up your environment variables
+   cp .env.example .env
    ```
+   *(Optional: Open the newly created `.env` file to add your `SUNO_API_KEY` if you plan to use the real API instead of the mock).*
 
 3. **Database Configuration:**
    Ensure PostgreSQL is running locally on port `5432` with a database named `ai_song_generation_platform`. Use `postgres` as both the default username and password (or change these in a `.env` file).
