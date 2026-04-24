@@ -5,6 +5,7 @@ class Playlist(models.Model):
     owner = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="playlists")
     name = models.CharField(max_length=255)
     songs = models.ManyToManyField("songs.Song", related_name="playlists", blank=True)
+    cover_image = models.ImageField(upload_to="playlist_covers/", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

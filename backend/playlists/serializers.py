@@ -11,7 +11,7 @@ class PlaylistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Playlist
-        fields = ["id", "owner", "name", "songs", "song_count", "created_at", "updated_at"]
+        fields = ["id", "owner", "name", "songs", "song_count", "cover_image", "created_at", "updated_at"]
         read_only_fields = ["id", "owner", "created_at", "updated_at"]
 
 
@@ -29,7 +29,7 @@ class PlaylistCreateSerializer(serializers.ModelSerializer):
 class PlaylistUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Playlist
-        fields = ["name"]
+        fields = ["name", "cover_image"]
 
 
 class PlaylistSongSerializer(serializers.Serializer):
