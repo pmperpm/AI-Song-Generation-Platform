@@ -130,7 +130,13 @@ window.fetchSongs = async function() {
                         : `<div class="share-box" style="color: var(--text-secondary);">Private. Change to public to get a shareable link.</div>`
                     }
 
-                    ${song.audio_url ? `<div class="audio-player"><audio controls src="${song.audio_url}"></audio></div>` : ''}
+                    ${song.audio_url ? `
+                        <div class="audio-player"><audio controls src="${song.audio_url}"></audio></div>
+                        <div class="controls" style="margin-top: 10px;">
+                            <button class="secondary" style="width: 100%;" onclick="downloadSong('${song.audio_url}', 'song-${song.id}.mp3', this)">
+                                ⬇ Download MP3
+                            </button>
+                        </div>` : ''}
                 </div>
             `;
         });
@@ -241,4 +247,29 @@ window.uploadPlaylistCover = async function(playlistId) {
         if(!res.ok) throw new Error(await res.text());
         fetchPlaylists();
     } catch(e) { alert(e.message); }
+};
+
+window.downloadSong = async function(url, filename, btn) {
+    const original = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = "Downloading...";
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to fetch audio.");
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+        btn.innerHTML = "Downloaded!";
+        setTimeout(() => { btn.innerHTML = original; btn.disabled = false; }, 2000);
+    } catch(e) {
+        btn.innerHTML = original;
+        btn.disabled = false;
+        alert("Download failed: " + e.message);
+    }
 };
