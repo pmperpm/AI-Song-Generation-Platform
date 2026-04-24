@@ -17,10 +17,8 @@ class SongListCreateView(generics.ListCreateAPIView):
         if user and user.is_authenticated:
             if user.role == Role.ADMIN:
                 return Song.objects.all()
-            return Song.objects.filter(owner=user) | Song.objects.filter(
-                visibility=Visibility.PUBLIC, status=Status.COMPLETE
-            ).exclude(owner=user)
-        return Song.objects.filter(visibility=Visibility.PUBLIC, status=Status.COMPLETE)
+            return Song.objects.filter(owner=user)
+        return Song.objects.none()
 
     def get_permissions(self):
         if self.request.method == "POST":
