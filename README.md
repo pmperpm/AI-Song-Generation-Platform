@@ -149,6 +149,6 @@ Navigate to **http://127.0.0.1:8000/admin/** and log in with your Superuser.
 [Mock API video with Postman](https://drive.google.com/file/d/1bfjSKXrCJrO5Zln6MxI05ggO6w2bwfLR/view?usp=share_link)
 
 ### Class Diagram
-![Class Diagram1](backend/class_diagram/classes_AI-Song-Generation-Platform.png)
+![Class Diagram1](backend/class_diagram/classes_AI-Song-Generation-Platform.svg)
 ![Class Diagram2](backend/class_diagram/diagram.png)
-![Package](backend/class_diagram/packages_AI-Song-Generation-Platform.png)
+![Package](backend/class_diagram/packages_AI-Song-Generation-Platform.svg)
