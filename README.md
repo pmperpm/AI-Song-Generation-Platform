@@ -49,7 +49,14 @@
    ```bash
    python3 manage.py runserver
    ```
-   backend will now be live at `http://127.0.0.1:8000/`.
+   backend will now be live at `http://localhost:8000/`.
+
+7. **Run the Frontend Page:**
+   ```bash
+   cd frontend
+   python3 -m http.server 3000
+   ```
+   frontend will now be available at `http://localhost:3000/`.
 
 ---
 
@@ -134,3 +141,9 @@ Navigate to **http://127.0.0.1:8000/admin/** and log in with your Superuser.
 
 ### CRUD Operation Video and API Screenshots
 [AI Song Generation Platform Folders](https://drive.google.com/drive/folders/1rDlD28AFEa1Xlzm_DTEQohkNDBt1tzZX?usp=share_link)
+
+### Suno API
+[Suno API demo video](https://drive.google.com/file/d/14voZNByJGRDMfkUCZM0dgVU3KpHT201v/view?usp=sharing)
+
+### Mock Strategy
+[Mock API video with Postman](https://drive.google.com/file/d/1bfjSKXrCJrO5Zln6MxI05ggO6w2bwfLR/view?usp=share_link)
