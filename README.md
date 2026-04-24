@@ -83,6 +83,31 @@ Because both strategies take time to run, they are processed asynchronously.
    celery -A celery_app worker --loglevel=info
    ```
 
+## Google OAuth Configuration (Authentication)
+
+This project uses `dj-rest-auth` + `django-allauth` to support Google OAuth. Since we don't have passwords for local users, Google OAuth generates a valid Token API to log in.
+
+### 1. Set up Google Cloud Console
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create your project and go to **APIs & Services > Credentials**.
+3. Create **OAuth Client ID** (Type: Web Application).
+4. Complete the **Authorized JavaScript origins**:
+   * `http://localhost:3000`
+   * `http://127.0.0.1:3000`
+5. Complete the **Authorized redirect URIs**:
+   * `http://localhost:3000` (Or `http://localhost:3000/auth/callback` depending on how your frontend router is setup).
+   * Note: The Django backend won't intercept the raw redirect. The React/Vue frontend intercepts it and sends the `access_token` to `/api/auth/google/`.
+6. Copy your **Client ID** and **Client Secret**.
+
+### 2. Configure Django Settings
+Inside `backend/.env`, add:
+```env
+GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+**Without OAuth:** Users can still register with email/password.
+
 ---
 
 ## CRUD Operations 
