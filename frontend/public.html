@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Studios — Listen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --card: #13131a;
+            --border: rgba(255,255,255,0.08);
+            --accent: #7c6ef5;
+            --accent2: #c084fc;
+            --text-primary: #f0f0ff;
+            --text-secondary: #8888aa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        /* Ambient glow background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(124,110,245,0.12) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+        }
+
+        .brand {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 32px;
+            opacity: 0.8;
+        }
+
+        .song-title {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .song-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            text-transform: capitalize;
+        }
+
+        .song-meta span {
+            display: inline-block;
+            background: rgba(124,110,245,0.15);
+            border: 1px solid rgba(124,110,245,0.3);
+            border-radius: 20px;
+            padding: 4px 14px;
+            color: var(--accent2);
+            font-weight: 500;
+        }
+
+        /* Custom audio player */
+        audio {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            filter: invert(1) hue-rotate(200deg) brightness(0.85);
+        }
+
+        .cta {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .cta a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .cta a:hover { text-decoration: underline; }
+
+        /* Loading / error states */
+        .state {
+            font-size: 15px;
+            color: var(--text-secondary);
+            padding: 20px 0;
+        }
+
+        .state.error { color: #f87171; }
+
+        /* Waveform animation while loading */
+        .loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            height: 48px;
+            margin-bottom: 28px;
+        }
+
+        .loader span {
+            display: block;
+            width: 4px;
+            border-radius: 4px;
+            background: var(--accent);
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        .loader span:nth-child(1) { height: 16px; animation-delay: 0s; }
+        .loader span:nth-child(2) { height: 28px; animation-delay: 0.1s; }
+        .loader span:nth-child(3) { height: 40px; animation-delay: 0.2s; }
+        .loader span:nth-child(4) { height: 28px; animation-delay: 0.3s; }
+        .loader span:nth-child(5) { height: 16px; animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.5); opacity: 0.4; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="brand">AI Studios</div>
+        <div id="content" class="state">Loading song...</div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:8000/api";
+
+        async function loadSong() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const content = document.getElementById('content');
+
+            if (!id) {
+                content.className = 'state error';
+                content.textContent = 'No song ID provided.';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/songs/public/${id}/`);
+                if (!res.ok) throw new Error('Song not found or is private.');
+                const song = await res.json();
+
+                document.title = `${song.title || 'Untitled'} — AI Studios`;
+
+                content.innerHTML = `
+                    <h1 class="song-title">${song.title || 'Untitled Song'}</h1>
+                    <p class="song-meta"><span>${song.genre || 'Unknown Genre'}</span></p>
+                    ${song.audio_url
+                        ? `<audio controls autoplay src="${song.audio_url}"></audio>`
+                        : `<div class="loader">
+                                <span></span><span></span><span></span><span></span><span></span>
+                           </div>
+                           <p class="state">This song is still being generated. Check back soon!</p>`
+                    }
+                    <p class="cta">Made with <a href="http://localhost:3000" target="_blank">AI Studios</a> </p>
+                `;
+            } catch (e) {
+                content.className = 'state error';
+                content.textContent = e.message;
+            }
+        }
+
+        loadSong();
+    </script>
+</body>
+</html>

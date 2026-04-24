@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Song Generation Platform</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google OAuth -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="navbar">
+            <div style="display: flex; align-items: center; gap: 24px;">
+                <div class="logo" onclick="showPage('home')" style="cursor: pointer;">AI Studios</div>
+                <span id="nav-playlists" class="hidden" onclick="showPage('playlists')" style="font-size: 15px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Playlists</span>
+            </div>
+            <div id="user-controls" class="badges hidden">
+                <span class="status-badge status-complete">Logged In</span>
+                <button class="danger" onclick="logout()" style="padding: 8px 16px;">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Auth Section -->
+        <div id="auth-section" class="card">
+            <h2>Welcome Back</h2>
+            <p>Sign in to start creating AI-generated music and building your unique playlists.</p>
+            
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <div id="g_id_onload" data-client_id="909408534338-smmtobve4cufm240oko8lr82lm78306o.apps.googleusercontent.com" data-callback="handleGoogleLogin"></div>
+                <div class="g_id_signin" data-type="standard" data-theme="filled_black" data-size="large"></div>
+            </div>
+        </div>
+
+        <!-- Main App Section (Home Page) -->
+        <div id="app-section" class="app-container hidden">
+            
+            <!-- Left Sidebar (Generate only) -->
+            <div class="sidebar">
+                <div class="card">
+                    <h2>Create a Song</h2>
+                    <label style="font-size: 14px; color: var(--text-secondary);">Story/Prompt: <span style="color: #e05252;">*</span></label>
+                    <input type="text" id="story-input" placeholder="A lo-fi beat about late night coding...">
+                    
+                    <label style="font-size: 14px; color: var(--text-secondary);">Genre: <span style="color: #e05252;">*</span></label>
+                    <select id="genre-input">
+                        <option value="pop">Pop</option>
+                        <option value="electronic">Electronic</option>
+                        <option value="hip_hop">Hip-Hop</option>
+                        <option value="rock">Rock</option>
+                        <option value="jazz">Jazz</option>
+                        <option value="rnb">R&B</option>
+                        <option value="classical">Classical</option>
+                        <option value="country">Country</option>
+                        <option value="blues">Blues</option>
+                        <option value="reggae">Reggae</option>
+                        <option value="metal">Metal</option>
+                        <option value="indie">Indie</option>
+                        <option value="folk">Folk</option>
+                    </select>
+
+                    <label style="font-size: 14px; color: var(--text-secondary);">Mood: <span style="font-size: 12px; opacity: 0.6;">(optional)</span></label>
+                    <input type="text" id="mood-input" placeholder="e.g. happy, melancholic, energetic...">
+
+                    <label style="font-size: 14px; color: var(--text-secondary);">Occasion: <span style="font-size: 12px; opacity: 0.6;">(optional)</span></label>
+                    <input type="text" id="occasion-input" placeholder="e.g. birthday, wedding, road trip...">
+
+                    <label style="font-size: 14px; color: var(--text-secondary);">Language: <span style="font-size: 12px; opacity: 0.6;">(optional)</span></label>
+                    <input type="text" id="language-input" placeholder="English" value="English">
+
+                    <label style="font-size: 14px; color: var(--text-secondary);">Custom Lyrics: <span style="font-size: 12px; opacity: 0.6;">(optional, leave blank to auto-generate)</span></label>
+                    <textarea id="lyrics-input" placeholder="Paste your custom lyrics here..."></textarea>                    
+                    <button onclick="generateSong()" style="width: 100%;">Generate Song</button>
+                    <p id="generate-status" style="font-size: 13px; margin-top: 15px; color: var(--text-secondary); text-align: center;"></p>
+                </div>
+            </div>
+
+            <!-- Right Content (Library) -->
+            <div class="main-content">
+                <div class="card">
+                    <div class="flex-row" style="margin-bottom: 20px;">
+                        <h2>Your Library</h2>
+                        <button onclick="fetchSongs()" class="secondary" style="padding: 6px 12px; font-size: 12px;">↻ Refresh</button>
+                    </div>
+                    <div id="songs-list"><p style="color: var(--text-secondary);">Loading songs...</p></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Playlists Page -->
+        <div id="playlists-section" class="hidden">
+            <div class="card" style="max-width: 700px; margin: 0 auto;">
+                <div class="flex-row" style="margin-bottom: 20px;">
+                    <h2>Playlists</h2>
+                    <button onclick="fetchPlaylists()" class="secondary" style="padding: 6px 12px; font-size: 12px;">↻ Refresh</button>
+                </div>
+
+                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 24px;">
+                    <input type="text" id="new-playlist-name" placeholder="New Playlist Name" style="margin-bottom: 10px;">
+                    <button onclick="createPlaylist()" class="success" style="width: 100%;">+ Create Playlist</button>
+                </div>
+
+                <div id="playlists-list"><p style="color: var(--text-secondary);">Loading playlists...</p></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Page Navigation Logic -->
+    <script>
+        function showPage(page) {
+            const appSection = document.getElementById('app-section');
+            const playlistsSection = document.getElementById('playlists-section');
+            const navPlaylists = document.getElementById('nav-playlists');
+
+            if (page === 'home') {
+                appSection.classList.remove('hidden');
+                playlistsSection.classList.add('hidden');
+                navPlaylists.style.color = 'var(--text-secondary)';
+            } else if (page === 'playlists') {
+                appSection.classList.add('hidden');
+                playlistsSection.classList.remove('hidden');
+                navPlaylists.style.color = 'var(--text-primary)';
+                fetchPlaylists();
+            }
+        }
+
+        // Show nav links only when logged in — hook into your existing login/logout flow
+        const _origHandleGoogleLogin = window.handleGoogleLogin;
+        window.addEventListener('load', () => {
+            // Patch handleGoogleLogin to also show nav after login
+            if (typeof handleGoogleLogin === 'function') {
+                const original = handleGoogleLogin;
+                window.handleGoogleLogin = function(response) {
+                    original(response);
+                    document.getElementById('nav-playlists').classList.remove('hidden');
+                };
+            }
+
+            // Patch logout to hide nav
+            if (typeof logout === 'function') {
+                const origLogout = logout;
+                window.logout = function() {
+                    origLogout();
+                    document.getElementById('nav-playlists').classList.add('hidden');
+                };
+            }
+        });
+    </script>
+
+    <!-- Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
