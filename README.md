@@ -83,8 +83,14 @@ SUNO_API_KEY=your_real_api_key_here
 Because both strategies take time to run, they are processed asynchronously. 
 **You must run Redis and Celery alongside your Django server:**
 
-1. Start Redis: `redis-server`
-2. Start Celery (in a new terminal):
+1. Install Redis if you haven't already:
+   - Mac: `brew install redis`
+   - Linux: `sudo apt install redis-server`
+2. Start the Redis server:
+   ```bash
+   redis-server
+   ```
+3. Start Celery (in a new terminal):
    ```bash
    cd backend
    celery -A celery_app worker --loglevel=info

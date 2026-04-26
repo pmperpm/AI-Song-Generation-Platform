@@ -7,7 +7,10 @@ Pillow==10.4.0
 httpx
 celery
 redis
+requests
+cryptography
 
 dj-rest-auth==7.2.0
 django-allauth==65.16.1
 djangorestframework-simplejwt==5.2.2
+django_extensions==3.2.3
