@@ -87,6 +87,12 @@ DATABASES = {
     }
 }
 
+# Automatically create accounts on first Google login — skips the signup redirect page
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+# Skip email verification (Google already verified it)
+ACCOUNT_EMAIL_REQUIRED = False
+
 # Custom User Model
 AUTH_USER_MODEL = "users.User"
 
