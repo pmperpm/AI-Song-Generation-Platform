@@ -119,8 +119,6 @@ GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
-**Without OAuth:** Users can still register with email/password.
-
 ---
 
 ## CRUD Operations 
