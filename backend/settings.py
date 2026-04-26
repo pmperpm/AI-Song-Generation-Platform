@@ -87,7 +87,7 @@ DATABASES = {
     }
 }
 
-# Automatically create accounts on first Google login — skips the signup redirect page
+# Automatically create accounts on first Google login; skips the signup redirect page
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
 # Skip email verification (Google already verified it)

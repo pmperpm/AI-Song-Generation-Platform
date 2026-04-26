@@ -2,7 +2,33 @@ const API_URL = "http://localhost:8000/api";
 let apiToken = localStorage.getItem('django_auth_token');
 let mySongs = []; // cache array
 
-window.onload = () => { if (apiToken) showApp(); };
+window.onload = async () => { 
+    if (apiToken) {
+        showApp(); 
+    }
+    
+    // Fetch dynamic Google Client ID and initialize OAuth button
+    try {
+        const res = await fetch(`${API_URL}/auth/google/config/`);
+        const config = await res.json();
+        if (config.client_id) {
+            google.accounts.id.initialize({
+                client_id: config.client_id,
+                callback: window.handleGoogleLogin
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("google-login-button"),
+                { theme: "filled_black", size: "large", type: "standard" }
+            );
+            // Optional: prompt One Tap
+            // google.accounts.id.prompt();
+        } else {
+            console.error("No Google Client ID received from backend.");
+        }
+    } catch (e) {
+        console.error("Failed to load Google Config:", e);
+    }
+};
 
 window.handleGoogleLogin = function(response) {
     fetch(`${API_URL}/auth/google/`, {
